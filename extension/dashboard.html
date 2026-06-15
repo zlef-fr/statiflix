@@ -34,6 +34,23 @@
     <span class="mark big">S</span>
     <h2 data-i18n="dash.empty_title"></h2>
     <p data-i18n="dash.empty_body"></p>
+    <button class="pill primary" id="emptyAnalyze" data-i18n="popup.analyze"></button>
+  </div>
+
+  <!-- Harvest progress overlay -->
+  <div id="loading" class="loadwrap hidden">
+    <span class="mark big">S</span>
+    <div class="load-msg" id="loadMsg" data-i18n="popup.fetching"></div>
+    <div class="load-track"><div class="load-bar" id="loadBar"></div></div>
+    <div class="load-sub" id="loadSub"></div>
+  </div>
+
+  <!-- Error -->
+  <div id="harvestErr" class="empty hidden">
+    <span class="mark big">S</span>
+    <h2 id="errTitle"></h2>
+    <p id="errBody"></p>
+    <button class="pill primary" id="errRetry" data-i18n="popup.refresh"></button>
   </div>
 
   <!-- Sync modal -->
@@ -67,6 +84,7 @@
   <script src="vendor/qrcode.min.js"></script>
   <script src="js/enrich.js"></script>
   <script src="js/sync.js"></script>
+  <script src="js/harvest.js"></script>
   <script src="js/dashboard.js"></script>
 </body>
 </html>

@@ -275,32 +275,67 @@
     sel.onchange = () => { I.setLang(sel.value); recompute(); buildYearSelect(); };
   }
 
-  async function init() {
-    I.applyDOM(document);
-    raw = await load();
-    if (!raw || !raw.items || !raw.items.length) {
-      stats = S.emptyStats(); render();
-      buildLangSelect();
-      return;
+  /* ---------- screen switching ---------- */
+  const SCREENS = ['app', 'empty', 'loading', 'harvestErr'];
+  function showScreen(id) { SCREENS.forEach((s) => $(s).classList.toggle('hidden', s !== id)); }
+
+  /* ---------- harvest ---------- */
+  async function runHarvest() {
+    showScreen('loading');
+    $('loadMsg').textContent = t('load.starting');
+    $('loadBar').style.width = '0%';
+    $('loadSub').textContent = '';
+    try {
+      const res = await window.STX_HARVEST.run((phase, done, total) => {
+        if (phase === 'history') { $('loadMsg').textContent = t('load.history', { done, total }); $('loadBar').style.width = (total ? Math.min(70, (done / total) * 70) : 5) + '%'; }
+        else if (phase === 'meta') { $('loadMsg').textContent = t('load.meta', { done, total }); $('loadBar').style.width = (70 + (total ? (done / total) * 30 : 0)) + '%'; }
+        else if (phase === 'done') { $('loadBar').style.width = '100%'; }
+      });
+      raw = { items: res.items, profileName: res.profileName, fetchedAt: res.fetchedAt };
+      await chrome.storage.local.set({ [DATA_KEY]: raw });
+      boot();
+    } catch (e) {
+      const code = (e && e.code) || 'UNKNOWN';
+      const map = {
+        NOT_LOGGED_IN: ['err.login_title', 'err.login_body'],
+        EMPTY: ['err.empty_title', 'err.empty_body'],
+        API_ERROR: ['err.api_title', 'err.api_body'],
+      };
+      const [tk, bk] = map[code] || ['err.generic_title', 'err.generic_body'];
+      $('errTitle').textContent = t(tk); $('errBody').textContent = t(bk);
+      showScreen('harvestErr');
     }
-    // default to most recent year that has data
+  }
+
+  /* ---------- boot (render with data in `raw`) ---------- */
+  function boot() {
     const full = S.compute(raw.items, {});
     yearSel = full.span.years.length ? full.span.years[0] : null;
     stats = S.compute(raw.items, { year: yearSel });
     $('sub').textContent = raw.profileName ? '· ' + raw.profileName : '';
-
-    buildLangSelect();
+    showScreen('app');
     buildYearSelect();
     render();
 
-    // sync modal
+    // auto-enable enrichment if the relay has a TMDB key
+    window.STX_ENRICH.available().then(async (ok) => {
+      if (!ok) return;
+      const titles = [...new Set(stats.top.concat(stats.rewatched, stats.abandonedList).map((x) => x.title))];
+      enrichMap = Object.assign(enrichMap, await window.STX_ENRICH.enrich(titles));
+      recompute();
+    });
+  }
+
+  async function init() {
+    I.applyDOM(document);
+    buildLangSelect();
+
+    // wire persistent controls (live across screens)
     const sync = window.STX_SYNC.wire({
       modal: $('syncModal'), qrBox: $('qrBox'), status: $('syncStatus'),
       copyBtn: $('copyLink'), closeBtn: $('syncClose'),
     }, snapshot);
     $('syncBtn').addEventListener('click', sync.open);
-
-    // export menu
     const em = $('exportMenu');
     $('exportBtn').addEventListener('click', (e) => { e.stopPropagation(); em.classList.toggle('hidden'); });
     document.addEventListener('click', () => em.classList.add('hidden'));
@@ -309,13 +344,14 @@
       if (act === 'json') exportJSON(); else if (act === 'csv') exportCSV(); else if (act === 'recap') exportRecap();
       em.classList.add('hidden');
     });
+    $('emptyAnalyze').addEventListener('click', runHarvest);
+    $('errRetry').addEventListener('click', runHarvest);
 
-    // auto-enable enrichment if relay has a key (covers/genres light up automatically)
-    if (await window.STX_ENRICH.available()) {
-      const titles = [...new Set(stats.top.concat(stats.rewatched, stats.abandonedList).map((x) => x.title))];
-      enrichMap = await window.STX_ENRICH.enrich(titles);
-      recompute();
-    }
+    const params = new URLSearchParams(location.search);
+    raw = await load();
+    const hasData = raw && raw.items && raw.items.length;
+    if (params.get('run') === '1' || !hasData) runHarvest();  // force refresh, or first run
+    else boot();
   }
 
   init();

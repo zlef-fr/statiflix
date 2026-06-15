@@ -151,6 +151,16 @@ body {
 .empty { max-width: 480px; margin: 90px auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 14px; }
 .empty h2 { font-size: 22px; }
 .empty p { color: var(--muted); line-height: 1.6; }
+.empty .pill { margin-top: 6px; }
+
+/* Loading overlay */
+.loadwrap { max-width: 420px; margin: 120px auto; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; }
+.load-msg { font-size: 16px; font-weight: 600; }
+.load-track { width: 280px; height: 8px; background: #1f1f27; border-radius: 5px; overflow: hidden; }
+.load-bar { height: 8px; width: 0; background: linear-gradient(90deg, var(--red-dim), var(--red)); border-radius: 5px; transition: width .3s ease; }
+.load-sub { color: var(--dim); font-size: 12.5px; }
+.mark.big { animation: pulse 1.8s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { box-shadow: 0 0 18px rgba(229,9,20,.4); } 50% { box-shadow: 0 0 34px rgba(229,9,20,.75); } }
 
 /* Modals */
 .modal { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.7); backdrop-filter: blur(4px); padding: 20px; }
