@@ -1,6 +1,6 @@
 # Statiflix — Chrome Web Store submission kit
 
-Everything needed to publish. Upload `statiflix-1.0.0.zip`, then copy each field below into
+Everything needed to publish. Upload `statiflix-2.0.0.zip`, then copy each field below into
 the Developer Dashboard (https://chrome.google.com/webstore/devconsole). A one-time $5
 developer registration fee applies to the account.
 
@@ -8,8 +8,8 @@ developer registration fee applies to the account.
 
 ## 1. Package to upload
 
-- **File:** `store/statiflix-1.0.0.zip` (manifest.json at the zip root — store-ready)
-- **Manifest version:** 3 · **Version:** 1.0.0
+- **File:** `store/statiflix-2.0.0.zip` (manifest.json at the zip root — store-ready)
+- **Manifest version:** 3 · **Version:** 2.0.0
 
 ---
 
@@ -160,8 +160,8 @@ Screenshots use mock titles (no real personal viewing data).
 ## 7. Notes before publishing
 
 - Bump `version` in `manifest.json` and re-zip for every future update (the store rejects re-uploads with the same version).
-- Re-build the upload zip after code changes: `npm run zip` then copy `public/statiflix.zip` to `store/statiflix-1.0.0.zip`, or:
-  `cd extension && zip -rq ../store/statiflix-1.0.0.zip . -x ".*"`
+- Re-build the upload zip after code changes: `npm run zip` then copy `public/statiflix.zip` to `store/statiflix-2.0.0.zip`, or:
+  `cd extension && zip -rq ../store/statiflix-2.0.0.zip . -x ".*"`
 - Re-generate assets: `NODE_PATH=/usr/lib/node_modules node store/gen-assets.js`
 - Review typically takes a few hours to a few days. The viewing-history permissions may draw
   extra review — the privacy policy and the "data processed locally / E2EE when synced"
