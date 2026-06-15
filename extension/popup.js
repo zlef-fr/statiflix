@@ -6,11 +6,6 @@
   const $ = (id) => document.getElementById(id);
   const DATA_KEY = 'statiflix.data';
 
-  const sel = $('lang');
-  langs.forEach((l) => { const o = document.createElement('option'); o.value = l; o.textContent = l.toUpperCase(); sel.appendChild(o); });
-  sel.value = getLang();
-  sel.onchange = () => { setLang(sel.value); render(); };
-
   function relTime(ms) {
     if (!ms) return t('popup.never');
     const m = Math.round((Date.now() - ms) / 60000);

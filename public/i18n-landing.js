@@ -66,9 +66,10 @@
       'foot.made': 'Outil libre et gratuit par Claude sur zlef.fr. Sans lien avec Netflix, ni approuvé par Netflix.',
     },
   };
-  const KEY = 'statiflix.lang';
-  let lang = (function () {
-    try { const s = localStorage.getItem(KEY); if (s && DICT[s]) return s; } catch (_) {}
+  // da.zlef.fr i18n convention: two locales → NO selector, silent detection.
+  // Sitewide `zl-lang` cookie (.zlef.fr) → browser language → en.
+  const lang = (function () {
+    try { const m = document.cookie.match('(?:^|; )zl-lang=([^;]*)'); const c = m && decodeURIComponent(m[1]); if (c && DICT[c]) return c; } catch (_) {}
     for (const l of (navigator.languages || [navigator.language || 'en'])) { const c = String(l).slice(0, 2).toLowerCase(); if (DICT[c]) return c; }
     return 'en';
   })();
@@ -78,12 +79,6 @@
     document.querySelectorAll('[data-i18n]').forEach((e) => (e.textContent = t(e.getAttribute('data-i18n'))));
     document.querySelectorAll('[data-i18n-html]').forEach((e) => (e.innerHTML = t(e.getAttribute('data-i18n-html'))));
   }
-
-  // language selector
-  const sel = document.getElementById('lang');
-  Object.keys(DICT).forEach((l) => { const o = document.createElement('option'); o.value = l; o.textContent = l.toUpperCase(); sel.appendChild(o); });
-  sel.value = lang;
-  sel.onchange = () => { lang = sel.value; try { localStorage.setItem(KEY, lang); } catch (_) {} apply(); };
 
   // Hero artwork: a faithful mini-dashboard in a phone frame (Netflix-themed).
   function heroArt() {

@@ -104,16 +104,8 @@
     return Object.entries(counts).map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value).slice(0, 6);
   }
 
-  function buildLang() {
-    const sel = $('lang'); sel.textContent = '';
-    I.langs.forEach((l) => { const o = document.createElement('option'); o.value = l; o.textContent = l.toUpperCase(); sel.appendChild(o); });
-    sel.value = I.getLang();
-    sel.onchange = () => { I.setLang(sel.value); if (snap) render(); };
-  }
-
   async function init() {
     I.applyDOM(document);
-    buildLang();
     const f = parseFrag();
     if (!f) { showState(t('pwa.error'), true); return; }
     showState(t('pwa.loading'), false);
@@ -122,7 +114,7 @@
       if (!r.ok) throw new Error('gone');
       const { blob } = await r.json();
       snap = await C.decrypt(blob, f.key);
-      if (snap.lang && I.langs.includes(snap.lang)) { I.setLang(snap.lang); buildLang(); }
+      // language follows the visitor's own zl-lang cookie / browser (set in init)
       hideState();
       render();
     } catch (e) {

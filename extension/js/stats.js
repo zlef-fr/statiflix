@@ -138,9 +138,11 @@
       if ((now - a.lastDate) <= ABANDON_GAP_DAYS * DAY_MS) continue; // still recent
       if (a.isEpisode) {
         const ec = meta[a.key.slice(1)] && meta[a.key.slice(1)].episodeCount;
-        if (!ec || a.distinctEpisodes >= ec) continue;             // unknown total / finished
+        if (!ec || ec < 6) continue;                               // unknown total / too short to judge
+        if (a.distinctEpisodes >= ec) continue;                    // finished
+        if (ec - a.distinctEpisodes < 4) continue;                 // almost done — not "abandoned"
         const completion = a.distinctEpisodes / ec;
-        if (completion >= 0.5) continue;                            // got more than halfway
+        if (completion >= 0.5) continue;                           // got more than halfway
         ab.push(Object.assign({}, a, { kind: 'series', episodeCount: ec, completion }));
       } else {
         if (!a.rt || !a.bm || a.bm <= 0) continue;                 // no progress signal

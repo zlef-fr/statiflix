@@ -215,14 +215,18 @@
     },
   };
 
-  const STORE_KEY = 'statiflix.lang';
+  // da.zlef.fr convention: sitewide language lives in the `zl-lang` cookie scoped
+  // to .zlef.fr (shared across every property). Resolution: cookie → browser → en.
+  // (On the chrome-extension origin there is no such cookie, so it falls to the
+  // browser language — a silent, selector-free choice, per the two-locale rule.)
+  function readCookie(name) {
+    try { const m = document.cookie.match('(?:^|; )' + name + '=([^;]*)'); return m ? decodeURIComponent(m[1]) : null; }
+    catch (_) { return null; }
+  }
   function detect() {
-    try {
-      const saved = localStorage.getItem(STORE_KEY);
-      if (saved && DICT[saved]) return saved;
-    } catch (_) {}
+    const c = readCookie('zl-lang'); if (c && DICT[c]) return c;
     const nav = (navigator.languages || [navigator.language || 'en']);
-    for (const l of nav) { const c = String(l).slice(0, 2).toLowerCase(); if (DICT[c]) return c; }
+    for (const l of nav) { const x = String(l).slice(0, 2).toLowerCase(); if (DICT[x]) return x; }
     return 'en';
   }
 
@@ -237,7 +241,8 @@
   function setLang(l) {
     if (!DICT[l]) return;
     lang = l;
-    try { localStorage.setItem(STORE_KEY, l); } catch (_) {}
+    // Persist sitewide so the choice follows the visitor across *.zlef.fr.
+    try { document.cookie = 'zl-lang=' + l + '; domain=.zlef.fr; path=/; max-age=31536000; samesite=lax'; } catch (_) {}
     applyDOM(document);
     if (typeof root.onLangChange === 'function') root.onLangChange(l);
   }

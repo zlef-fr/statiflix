@@ -8,8 +8,9 @@
   const DATA_KEY = 'statiflix.data';
 
   let raw = null;          // { items, profileName, art, fetchedAt }
-  let yearSel = null;      // number or null (all)
+  let yearSel = null;      // number or null (all time, the default)
   let stats = null;        // computed for current year
+  let globalStats = null;  // all-time (abandoned is a lifetime property, never per-year)
   let enrichMap = {};      // title -> { poster, genres }
   let allYears = [];       // all years with data (desc)
 
@@ -24,13 +25,14 @@
     return it;
   }
   function decorate(s) {
-    s.top.forEach(dec); s.abandonedList.forEach(dec);
+    s.top.forEach(dec);
     if (s.binge) s.binge.titles.forEach(dec);
+    if (globalStats) globalStats.abandonedList.forEach(dec);
   }
   function genreRows(s) {
     const counts = {};
     const seen = new Set();
-    s.top.concat(s.abandonedList).forEach((it) => {
+    s.top.concat(globalStats ? globalStats.abandonedList : []).forEach((it) => {
       if (seen.has(it.key)) return; seen.add(it.key);
       const g = it.genres || (artFor(it.key) && artFor(it.key).genres) || (enrichMap[it.title] && enrichMap[it.title].genres);
       if (g && g.length) counts[g[0]] = (counts[g[0]] || 0) + Math.max(1, it.hours || 1);
@@ -81,8 +83,8 @@
       kpi(t('stat.peak_hour'), stats.peak.hour == null ? '—' : hod(stats.peak.hour)),
       kpi(t('stat.peak_day'), stats.peak.day == null ? '—' : days[stats.peak.day]),
       kpi(t('stat.streak'), String(stats.streak), t('stat.days')),
-      kpi(t('stat.abandoned'), stats.totals.abandoned.toLocaleString(), t('stat.titles_unit'),
-        { onClick: stats.abandonedList.length ? () => drill(t('sec.abandoned'), abandonedList()) : null }),
+      kpi(t('stat.abandoned'), globalStats.totals.abandoned.toLocaleString(), t('stat.titles_unit'),
+        { onClick: globalStats.abandonedList.length ? () => drill(t('sec.abandoned'), abandonedList()) : null }),
     ]));
 
     // Top rail
@@ -108,11 +110,11 @@
       bingeCard(),
     ]));
 
-    // Abandoned (full width, real signals)
-    if (stats.abandonedList.length) {
+    // Abandoned (all-time, real signals — a lifetime property, never per-year)
+    if (globalStats.abandonedList.length) {
       app.appendChild(el('div', { class: 'card' }, [
-        cardHead(t('sec.abandoned'), t('sec.abandoned_sub'), stats.abandonedList.length > 6 ? () => drill(t('sec.abandoned'), abandonedList()) : null),
-        R.rankList(stats.abandonedList.slice(0, 6), { rank: false, sub: abandonedSub, value: (it) => R.fmtHours(it.hours) }),
+        cardHead(t('sec.abandoned'), t('sec.abandoned_sub'), globalStats.abandonedList.length > 6 ? () => drill(t('sec.abandoned'), abandonedList()) : null),
+        R.rankList(globalStats.abandonedList.slice(0, 6), { rank: false, sub: abandonedSub, value: (it) => R.fmtHours(it.hours) }),
       ]));
     }
 
@@ -231,7 +233,7 @@
   }
 
   function abandonedList() {
-    return R.rankList(stats.abandonedList, { rank: false, sub: abandonedSub, value: (it) => R.fmtHours(it.hours) });
+    return R.rankList(globalStats.abandonedList, { rank: false, sub: abandonedSub, value: (it) => R.fmtHours(it.hours) });
   }
 
   /* ---------- drill modal (supports nested back navigation) ---------- */
@@ -248,7 +250,7 @@
   /* ---------- enrichment trigger ---------- */
   async function doEnrich(btn) {
     btn.disabled = true; btn.textContent = t('label.genres_loading');
-    const titles = [...new Set(stats.top.concat(stats.abandonedList).map((x) => x.title))];
+    const titles = [...new Set(stats.top.concat(globalStats.abandonedList).map((x) => x.title))];
     enrichMap = Object.assign(enrichMap, await window.STX_ENRICH.enrich(titles));
     recompute(); // re-render with posters/genres
   }
@@ -260,7 +262,7 @@
     recompute();
   }
   function recompute() {
-    stats = S.compute(raw.items, { year: yearSel, meta: raw.art });
+    stats = yearSel == null ? globalStats : S.compute(raw.items, { year: yearSel, meta: raw.art });
     render();
   }
 
@@ -321,12 +323,15 @@
 
   /* ---------- snapshot for sync/export ---------- */
   function snapshot() {
+    // Sync the current view's stats, but always carry the all-time abandoned list
+    // (it's a lifetime property, not a per-year one).
+    const out = Object.assign({}, stats, { abandonedList: globalStats.abandonedList, totals: Object.assign({}, stats.totals, { abandoned: globalStats.totals.abandoned }) });
     return {
       v: 1, kind: 'statiflix-snapshot',
       profileName: raw.profileName || null,
       year: yearSel, generatedAt: Date.now(),
       lang: I.getLang(),
-      stats: stats,
+      stats: out,
     };
   }
 
@@ -337,13 +342,6 @@
     stats.span.years.forEach((y) => { const o = document.createElement('option'); o.value = y; o.textContent = y; sel.appendChild(o); });
     sel.value = yearSel || '';
     sel.onchange = () => setYear(sel.value ? Number(sel.value) : null);
-  }
-
-  function buildLangSelect() {
-    const sel = $('lang'); sel.textContent = '';
-    I.langs.forEach((l) => { const o = document.createElement('option'); o.value = l; o.textContent = l.toUpperCase(); sel.appendChild(o); });
-    sel.value = I.getLang();
-    sel.onchange = () => { I.setLang(sel.value); recompute(); buildYearSelect(); };
   }
 
   /* ---------- screen switching ---------- */
@@ -381,10 +379,10 @@
 
   /* ---------- boot (render with data in `raw`) ---------- */
   function boot() {
-    const full = S.compute(raw.items, { meta: raw.art });
-    allYears = full.span.years;
-    yearSel = allYears.length ? allYears[0] : null;
-    stats = S.compute(raw.items, { year: yearSel, meta: raw.art });
+    globalStats = S.compute(raw.items, { meta: raw.art });   // all-time (lifetime totals + abandoned)
+    allYears = globalStats.span.years;
+    yearSel = null;                                          // default: All time, so totals match reality
+    stats = globalStats;
     $('sub').textContent = raw.profileName ? '· ' + raw.profileName : '';
     showScreen('app');
     buildYearSelect();
@@ -393,7 +391,7 @@
     // auto-enable TMDB enrichment only as a fallback for titles lacking Netflix art
     window.STX_ENRICH.available().then(async (ok) => {
       if (!ok) return;
-      const titles = [...new Set(stats.top.concat(stats.abandonedList).filter((x) => !artFor(x.key)).map((x) => x.title))];
+      const titles = [...new Set(globalStats.top.concat(globalStats.abandonedList).filter((x) => !artFor(x.key)).map((x) => x.title))];
       if (!titles.length) return;
       enrichMap = Object.assign(enrichMap, await window.STX_ENRICH.enrich(titles));
       recompute();
@@ -402,7 +400,6 @@
 
   async function init() {
     I.applyDOM(document);
-    buildLangSelect();
 
     // wire persistent controls (live across screens)
     const sync = window.STX_SYNC.wire({
