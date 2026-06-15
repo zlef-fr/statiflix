@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!--zlef-seo-->
+  <meta name="description" content="Statiflix turns your Netflix watch history into a private, Spotify-Wrapped-style dashboard — rewatches, abandoned shows, genres and when you really binge. 100% local, free, open source, with an end-to-end-encrypted mobile companion.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://statiflix.zlef.fr/">
+  <meta name="theme-color" content="#0b0b0f">
+  <meta name="color-scheme" content="dark">
+  <link rel="icon" href="https://assets.zlef.fr/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="https://assets.zlef.fr/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="https://assets.zlef.fr/apple-touch-icon.png">
+  <link rel="manifest" href="https://assets.zlef.fr/site.webmanifest">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ZLEF">
+  <meta property="og:title" content="Statiflix — Your Netflix Viewing, Quantified">
+  <meta property="og:description" content="A private, Wrapped-style dashboard for your Netflix history — rewatches, abandoned shows, genres, binge patterns. 100% local, free & open source.">
+  <meta property="og:url" content="https://statiflix.zlef.fr/">
+  <meta property="og:image" content="https://assets.zlef.fr/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Statiflix — Your Netflix Viewing, Quantified">
+  <meta name="twitter:description" content="Spotify Wrapped for your streaming habits — private by design. Free & open source.">
+  <meta name="twitter:image" content="https://assets.zlef.fr/og-default.png">
+  <!--/zlef-seo-->
+  <title>Statiflix — Your Netflix Viewing, Quantified</title>
+  <link rel="stylesheet" href="https://da.zlef.fr/tokens.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <canvas id="zl-particles"></canvas>
+
+  <header class="bar">
+    <a class="brand" href="/">
+      <span class="mark">S</span>
+      <span class="word">STATI<span class="x">FLIX</span></span>
+    </a>
+    <nav>
+      <a href="#how" class="hide-sm" data-i18n="nav.how"></a>
+      <a href="#privacy" class="hide-sm" data-i18n="nav.privacy"></a>
+      <a href="https://github.com/claude-zlef/statiflix" class="hide-sm" target="_blank" rel="noopener">GitHub</a>
+      <select id="lang" class="lang" aria-label="Language"></select>
+      <a href="#get" class="cta" data-i18n="nav.install"></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero shell">
+      <div class="hero-copy">
+        <div class="kicker"><span class="dot"></span><span data-i18n="hero.kicker"></span></div>
+        <h1 data-i18n-html="hero.title"></h1>
+        <p class="lead" data-i18n="hero.lead"></p>
+        <div class="hero-cta">
+          <a href="#get" class="btn primary" data-i18n="hero.cta"></a>
+          <a href="#how" class="btn ghost" data-i18n="hero.cta2"></a>
+        </div>
+        <p class="micro" data-i18n="hero.micro"></p>
+      </div>
+      <div class="hero-art" id="heroArt"></div>
+    </section>
+
+    <section class="stats-strip shell">
+      <div><b data-i18n="strip.s1n"></b><span data-i18n="strip.s1"></span></div>
+      <div><b data-i18n="strip.s2n"></b><span data-i18n="strip.s2"></span></div>
+      <div><b data-i18n="strip.s3n"></b><span data-i18n="strip.s3"></span></div>
+      <div><b data-i18n="strip.s4n"></b><span data-i18n="strip.s4"></span></div>
+    </section>
+
+    <section class="features shell">
+      <div class="feat">
+        <div class="feat-ic">📊</div>
+        <h3 data-i18n="feat.1t"></h3>
+        <p data-i18n="feat.1b"></p>
+      </div>
+      <div class="feat">
+        <div class="feat-ic">🔒</div>
+        <h3 data-i18n="feat.2t"></h3>
+        <p data-i18n="feat.2b"></p>
+      </div>
+      <div class="feat">
+        <div class="feat-ic">🕙</div>
+        <h3 data-i18n="feat.3t"></h3>
+        <p data-i18n="feat.3b"></p>
+      </div>
+      <div class="feat">
+        <div class="feat-ic">📱</div>
+        <h3 data-i18n="feat.4t"></h3>
+        <p data-i18n="feat.4b"></p>
+      </div>
+    </section>
+
+    <section id="how" class="how shell">
+      <h2 data-i18n="how.title"></h2>
+      <div class="steps">
+        <div class="step"><span class="num">1</span><h3 data-i18n="how.1t"></h3><p data-i18n="how.1b"></p></div>
+        <div class="step"><span class="num">2</span><h3 data-i18n="how.2t"></h3><p data-i18n="how.2b"></p></div>
+        <div class="step"><span class="num">3</span><h3 data-i18n="how.3t"></h3><p data-i18n="how.3b"></p></div>
+      </div>
+    </section>
+
+    <section id="privacy" class="privacy shell">
+      <div class="priv-card">
+        <h2 data-i18n="priv.title"></h2>
+        <p data-i18n="priv.lead"></p>
+        <ul>
+          <li data-i18n="priv.1"></li>
+          <li data-i18n="priv.2"></li>
+          <li data-i18n="priv.3"></li>
+          <li data-i18n="priv.4"></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="get" class="get shell">
+      <h2 data-i18n="get.title"></h2>
+      <p data-i18n="get.lead"></p>
+      <a href="/statiflix.zip" class="btn primary big" data-i18n="get.download"></a>
+      <ol class="install">
+        <li data-i18n-html="get.s1"></li>
+        <li data-i18n-html="get.s2"></li>
+        <li data-i18n-html="get.s3"></li>
+        <li data-i18n-html="get.s4"></li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="foot shell">
+    <div class="brand small"><span class="mark">S</span><span class="word">STATI<span class="x">FLIX</span></span></div>
+    <p data-i18n="foot.made"></p>
+    <p class="links">
+      <a href="#privacy" data-i18n="nav.privacy"></a> ·
+      <a href="https://github.com/claude-zlef/statiflix" target="_blank" rel="noopener">GitHub</a> ·
+      <a href="https://projects.zlef.fr" target="_blank" rel="noopener">zlef.fr</a>
+    </p>
+  </footer>
+
+  <script defer src="https://assets.zlef.fr/particles.js"></script>
+  <script src="i18n-landing.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Statiflix</title>
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="mark">S</span>
+      <span class="word">STATI<span class="x">FLIX</span></span>
+      <span class="sub" id="sub"></span>
+    </div>
+    <div class="topactions">
+      <select id="year" class="pill select" aria-label="Year"></select>
+      <select id="lang" class="pill select" aria-label="Language"></select>
+      <div class="menu">
+        <button class="pill" id="exportBtn" data-i18n="dash.export"></button>
+        <div class="menu-pop hidden" id="exportMenu">
+          <button data-act="json" data-i18n="export.json"></button>
+          <button data-act="csv" data-i18n="export.csv"></button>
+          <button data-act="recap" data-i18n="export.recap"></button>
+        </div>
+      </div>
+      <button class="pill primary" id="syncBtn" data-i18n="dash.sync"></button>
+    </div>
+  </header>
+
+  <main id="app" class="wrap"></main>
+
+  <div id="empty" class="empty hidden">
+    <span class="mark big">S</span>
+    <h2 data-i18n="dash.empty_title"></h2>
+    <p data-i18n="dash.empty_body"></p>
+  </div>
+
+  <!-- Sync modal -->
+  <div id="syncModal" class="modal hidden">
+    <div class="modal-card">
+      <button class="modal-close" id="syncClose" aria-label="Close">×</button>
+      <h3 data-i18n="sync.title"></h3>
+      <p class="modal-body" data-i18n="sync.body"></p>
+      <div id="qrBox" class="qrbox"></div>
+      <div id="syncStatus" class="sync-status"></div>
+      <div class="modal-actions">
+        <button class="pill" id="copyLink" data-i18n="sync.copy"></button>
+      </div>
+      <div class="modal-expire" data-i18n="sync.expires"></div>
+    </div>
+  </div>
+
+  <!-- Drill-down modal -->
+  <div id="drillModal" class="modal hidden">
+    <div class="modal-card wide">
+      <button class="modal-close" id="drillClose" aria-label="Close">×</button>
+      <h3 id="drillTitle"></h3>
+      <div id="drillBody" class="drill-body"></div>
+    </div>
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/stats.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/crypto.js"></script>
+  <script src="vendor/qrcode.min.js"></script>
+  <script src="js/enrich.js"></script>
+  <script src="js/sync.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

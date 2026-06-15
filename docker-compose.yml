@@ -1,0 +1,13 @@
+services:
+  web:
+    build: .
+    container_name: statiflix
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      PORT: "10047"
+      # Optional: set a TMDB v3 API key to light up genres + real poster art.
+      # Without it, Statiflix uses private gradient posters and hides genres.
+      TMDB_API_KEY: "${TMDB_API_KEY:-}"
+    volumes:
+      - ./data:/app/data

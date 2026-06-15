@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!--zlef-seo-->
+  <meta name="description" content="Statiflix privacy policy — how the extension reads your Netflix history 100% locally, what the optional encrypted mobile sync stores, and what we never collect.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://statiflix.zlef.fr/privacy">
+  <meta name="theme-color" content="#0b0b0f">
+  <meta name="color-scheme" content="dark">
+  <link rel="icon" href="https://assets.zlef.fr/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="https://assets.zlef.fr/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="https://assets.zlef.fr/apple-touch-icon.png">
+  <!--/zlef-seo-->
+  <title>Statiflix — Privacy</title>
+  <link rel="stylesheet" href="https://da.zlef.fr/tokens.css">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .doc { max-width: 760px; margin: 40px auto 80px; }
+    .doc h1 { font-size: 36px; margin-bottom: 8px; }
+    .doc .upd { color: var(--dim); font-size: 13px; margin-bottom: 30px; }
+    .doc h2 { font-size: 20px; margin: 30px 0 10px; }
+    .doc p, .doc li { color: #d2d2d2; font-size: 16px; }
+    .doc ul { margin: 10px 0 10px 22px; }
+    .doc li { margin: 6px 0; }
+    .doc a { color: var(--red); }
+  </style>
+</head>
+<body>
+  <canvas id="zl-particles"></canvas>
+  <header class="bar">
+    <a class="brand" href="/"><span class="mark">S</span><span class="word">STATI<span class="x">FLIX</span></span></a>
+    <nav><a href="/" class="cta">← Home</a></nav>
+  </header>
+
+  <main class="shell doc">
+    <h1>Privacy Policy</h1>
+    <div class="upd">Last updated: June 2026</div>
+
+    <p>Statiflix is built so that your viewing history stays yours. This page explains exactly what happens to your data — there isn't much to explain, by design.</p>
+
+    <h2>What the extension does</h2>
+    <p>When you click “Analyze my history”, the extension reads your <em>own</em> Netflix viewing-activity using the session already in your browser, and computes all statistics <strong>locally on your device</strong>. Your history is stored only in your browser's local extension storage. It is never uploaded anywhere.</p>
+
+    <h2>What we never collect</h2>
+    <ul>
+      <li>No account, email, or login.</li>
+      <li>No analytics, no tracking pixels, no advertising IDs.</li>
+      <li>No IP logging tied to your data.</li>
+      <li>No viewing history sent to any server in readable form — ever.</li>
+    </ul>
+
+    <h2>Optional: mobile sync</h2>
+    <p>If you choose to open your stats on your phone, the extension encrypts a snapshot with a key generated on your device (AES-256-GCM). Only the resulting <strong>ciphertext</strong> is uploaded to our relay, under a random ID, and auto-deletes after 24 hours. The decryption key travels <strong>only inside the QR code / URL fragment</strong> — it is never sent to the server, so the relay cannot read what it stores.</p>
+
+    <h2>Optional: genre &amp; cover enrichment</h2>
+    <p>If enabled, the extension sends <strong>only title names</strong> (no identity, no dates, no watch data) to our server, which looks them up in TMDB to add genres and poster art. Results are cached. This feature is off unless the lookup service is available, and it never transmits anything that identifies you.</p>
+
+    <h2>Open source</h2>
+    <p>Every line is auditable on <a href="https://github.com/claude-zlef/statiflix" target="_blank" rel="noopener">GitHub</a>. Statiflix is not affiliated with, or endorsed by, Netflix.</p>
+
+    <p style="margin-top:30px">Questions? <a href="mailto:claude@zlef.fr">claude@zlef.fr</a></p>
+  </main>
+
+  <script defer src="https://assets.zlef.fr/particles.js"></script>
+</body>
+</html>

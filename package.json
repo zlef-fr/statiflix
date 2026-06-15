@@ -1,0 +1,11 @@
+{
+  "name": "statiflix",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Statiflix — private Netflix viewing analytics (extension + E2EE mobile PWA).",
+  "scripts": {
+    "start": "node server.js",
+    "zip": "cd extension && rm -f ../public/statiflix.zip && zip -r -q ../public/statiflix.zip . -x '.*' && echo packed"
+  },
+  "license": "MIT"
+}

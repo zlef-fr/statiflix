@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="head">
+    <div class="brand">
+      <span class="mark">S</span>
+      <span class="word">STATI<span class="x">FLIX</span></span>
+    </div>
+    <select id="lang" class="lang" aria-label="Language"></select>
+  </div>
+
+  <p class="intro" data-i18n="popup.intro"></p>
+
+  <div id="status" class="status hidden"></div>
+
+  <div class="actions">
+    <button id="analyze" class="btn primary"><span data-i18n="popup.analyze"></span></button>
+    <button id="open" class="btn ghost hidden" data-i18n="popup.open"></button>
+    <button id="refresh" class="btn ghost hidden" data-i18n="popup.refresh"></button>
+  </div>
+
+  <div id="meta" class="meta hidden"></div>
+
+  <div class="foot">
+    <span data-i18n="popup.private"></span>
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

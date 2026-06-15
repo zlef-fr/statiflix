@@ -1,0 +1,14 @@
+{
+  "name": "Statiflix",
+  "short_name": "Statiflix",
+  "description": "Your Netflix viewing, quantified — end-to-end encrypted.",
+  "start_url": "/app",
+  "scope": "/app",
+  "display": "standalone",
+  "background_color": "#0b0b0f",
+  "theme_color": "#0b0b0f",
+  "icons": [
+    { "src": "https://assets.zlef.fr/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "https://assets.zlef.fr/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
