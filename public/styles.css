@@ -110,6 +110,8 @@ h1 .hl { color: var(--red); }
 .install li { counter-increment: s; position: relative; padding: 12px 0 12px 46px; border-bottom: 1px solid var(--line); color: #d8d8d8; font-size: 15px; }
 .install li::before { content: counter(s); position: absolute; left: 0; top: 11px; width: 28px; height: 28px; border-radius: 8px; background: #1b1b22; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; color: var(--red); }
 .install code { background: #1b1b22; border: 1px solid var(--line); padding: 1px 7px; border-radius: 5px; font-size: 13px; color: #e9c46a; }
+.get-src { margin: 22px auto 0; color: var(--muted); font-size: 14px; }
+.get-src a { color: #d8d8d8; }
 
 /* Footer */
 .foot { margin: 60px auto 40px; text-align: center; color: var(--muted); }
